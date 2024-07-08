@@ -54,7 +54,24 @@ class ChunkSection:
         y = block_pos[1]
         z = block_pos[2]
 
-        return self.blocks[x + z * 16 + y * 16 ** 2]
+        if len(self.blocks) != 4096:
+            #print("chunk not serialized, fixing but may corrupt world!")
+            self.blocks = [Block(BlockState('minecraft:air', {}), 0, 0, dirty=True) for i in range(4096)]
+
+        found_block = Block(BlockState('minecraft:air', {}), 0, 0, dirty=True)
+        try:
+            found_block = self.blocks[x+z*16+y*16**2]
+        except:
+            try:
+                self.blocks[x+z*16+y*16**2] = found_block
+            except:
+                #print("don't have enough blocks serialized but it's nonzero????")
+                #print("\t expected 4096, got: "+str(len(self.blocks)))
+                while len(self.blocks) < 4096:
+                    self.blocks.append(Block(BlockState('minecraft:air', {}), 0, 0, dirty=True))
+                self.blocks[x+z*16+y*16**2] = found_block
+        return found_block
+        #return self.blocks[x + z * 16 + y * 16 ** 2]
 
     def serialize(self):
         serial_section = self.raw_section
