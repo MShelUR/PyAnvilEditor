@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
   name = 'pyanvileditor',
-  packages = ['pyanvileditor'],
+  packages = ['pyanvil'],
   version = '0.1',
   license='MIT',
   description = 'Python3 library to load and edit minecraft savegames',
